@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js');
 const { Client, Intents } = require('discord.js');
-const GuildMember = new Discord.GuildMember();
 
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
@@ -55,8 +54,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
         }
         let member = reaction.message.guild.members.fetch(user.id);
         let voicemember = (await member).voice;
-        getnbusersinvoice(voicemember.channel);
-        const voiceChannelID =voicemember.channelId;
+        getnbusersinvoice(user.id);
+        const voiceChannelID = voicemember.channelId;
 
         if (voiceChannelID){
             reaction.message.channel.send("<#" + voiceChannelID + ">");
@@ -66,7 +65,11 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 
-function getnbusersinvoice(voiceChannel){
+async function getnbusersinvoice(userId){
+    let guild = await client.guilds.fetch('622115439782264834', {force: true, cache: false});
+    console.log(guild);
+    let member = await guild.members.fetch(userId, {force: true, cache: false});
+    let voicechannel = member.voice.channel;
     console.log('getnbusersinvoice :');
-    console.log(voiceChannel.members.size);
+    console.log(voicechannel.members.size);
 }
